@@ -1,1 +1,12 @@
----Ts Notes ---
+* primitive => string, number, undefiend, Null, any, void, unknown , never
+
+* implicite type : when ts automatically understands type of data
+* explicite type : when we manually tel ts what datatype it is
+
+* data assign na korle sheta ANY hishebe count hobe
+
+* non-primitive => function, array, object, class, interface, typealiase
+
+* literal Type : jokhn value k type hishebe declare kora hoy. Eta mutate kora jabe na.
+    organization : "Programming Hero"
+    onno vabeo kora jay "readOnly" access modifier use kore.
