@@ -1,4 +1,6 @@
 * primitive => string, number, undefiend, Null, any, void, unknown , never
+* unknow = jokhn type jana thake na
+* never = jokhon konodin konokisu return korben na
 
 * implicite type : when ts automatically understands type of data
 * explicite type : when we manually tel ts what datatype it is
@@ -15,3 +17,8 @@
 * Same type convention bar bar repeat hole amra Type aliasing use kori. ete bar bar object er type declare kora lage na. 
     eta muloto ekta variable er moto jeikhane object er shob property er type gula lekha thake. new object create korar time referance 
     er moto use korlei hoy
+
+
+* nullish qualising operator : kono varible jodi null/undefiend hoy tar jonno aita use kora hoy
+    const userTheme = undefined;
+    const selectedTheme = userAge ?? 'Light Theme';
