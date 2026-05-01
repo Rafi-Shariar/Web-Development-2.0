@@ -10,3 +10,8 @@
 * literal Type : jokhn value k type hishebe declare kora hoy. Eta mutate kora jabe na.
     organization : "Programming Hero"
     onno vabeo kora jay "readOnly" access modifier use kore.
+
+
+* Same type convention bar bar repeat hole amra Type aliasing use kori. ete bar bar object er type declare kora lage na. 
+    eta muloto ekta variable er moto jeikhane object er shob property er type gula lekha thake. new object create korar time referance 
+    er moto use korlei hoy
