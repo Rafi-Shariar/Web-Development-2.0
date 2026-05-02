@@ -14,10 +14,11 @@ const coordinate1 : Cordinates<number,number> = [1,4]
 const cordinate2 : Cordinates<string,string> = ['3', '4']
 
 // --- For Objects ------
-const userList : GenericArray<{
+type User = {
     name : string;
     age : number
-}> = [
+}
+const userList : GenericArray<User> = [
     { name: 'Rafi ', age: 12},
     { name : 'Shariar', age : 45}
 ]
