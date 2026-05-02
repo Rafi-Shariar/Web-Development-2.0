@@ -1,0 +1,11 @@
+----- Type Assertion ----
+Telling the compiler about the type of a variable and dont depend on Ts's automatic asumption.
+type narrow korte use kora hoy, age string | number | boolean type assumpt kore nito. but amra jodi jani return ta ki type ashbe tokhon assertion kore only sheitai use korte pari. Ete type narrow down hoy
+
+
+---- Interface. ------
+Same as type alias. creating custom types. but can not be used in premitive datatypes. Only works with Object | Array | function
+
+
+--- Generics -----
+dynamically generalize kora
