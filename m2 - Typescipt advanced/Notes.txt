@@ -9,3 +9,6 @@ Same as type alias. creating custom types. but can not be used in premitive data
 
 --- Generics -----
 dynamically generalize kora
+
+--- Contrain ---
+strict rules dewa
