@@ -12,3 +12,5 @@ dynamically generalize kora
 
 --- Contrain ---
 strict rules dewa
+
+amr type jodi onno ekta type er key hishebe thake tokhn amra 'keyof' use korbo
