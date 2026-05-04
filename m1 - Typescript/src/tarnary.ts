@@ -10,6 +10,6 @@ const Eligibility = ( age:number) => {
 
 
 const userTheme = undefined;
-const selectedTheme = userAge ?? 'Light Theme';     //nullish coalescing
+const selectedTheme = userTheme ?? 'Light Theme';     //nullish coalescing
 
 
