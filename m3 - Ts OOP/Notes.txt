@@ -1,0 +1,3 @@
+---- Inheritence ----
+extended a class a constructore use korle, super() use korte hobe. and super er moddhe 
+parent class er constructore er eliment gula diye dite hobe
