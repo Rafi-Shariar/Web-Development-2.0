@@ -9,6 +9,5 @@ enum UserRoles {
 
 const canEdit = (role : UserRoles) => {
     if(role === UserRoles.Admin || role === UserRoles.Editor) return true
-
     return false;
 }

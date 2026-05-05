@@ -1,4 +1,4 @@
-
+//Generics are a tool for creating reusable components that can work with a variety of types rather than a single one
 type GenericArray<T> = Array<T>
 
 const friends : GenericArray<string> = ['Rafi', 'Shariar', 'Qunb'];

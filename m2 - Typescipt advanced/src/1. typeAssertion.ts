@@ -1,3 +1,4 @@
+// when we already know what is the type of the result
 
 const kgToGMConverter = (input : string | number) : string | number | undefined => {
     if( typeof input === "number" ) return input*1000;

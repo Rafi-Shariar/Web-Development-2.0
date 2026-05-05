@@ -13,7 +13,7 @@ const arrObject = createArrayWithGeneric({id:123, name:'Rafi'});
 //For tupple
 const createArrayTuppleWithGeneric = <X,Y>(param1 : X, param2: Y) => [param1,param2];
 const res1 = createArrayTuppleWithGeneric('Rafi', true);
-// console.log(res1);
+console.log(res1); // [Rafi, true]
 
 
 //Example

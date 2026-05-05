@@ -1,3 +1,5 @@
+//insterface is always key-value pair
+
 interface User { // interface
     name : string;
     age : number;

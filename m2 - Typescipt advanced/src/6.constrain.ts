@@ -22,3 +22,5 @@ const student2 = {
 
 const s1 = addStudentToCourse(student1)
 const s2 = addStudentToCourse(student2)
+console.log(s1);
+console.log(s2);
