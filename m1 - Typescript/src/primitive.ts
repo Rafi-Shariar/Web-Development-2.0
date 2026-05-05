@@ -11,7 +11,7 @@ let x;
     else return 'no user'
  }
 
- getUser(null)
+ getUser(null) // Output -> no user
 
 
  // --- unknown ---

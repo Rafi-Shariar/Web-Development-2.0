@@ -1,4 +1,4 @@
-
+// used instead of enums
 const UserRoles = {
     Admin : 'Admin',
     Editor : 'Editor',

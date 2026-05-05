@@ -34,7 +34,7 @@ function add ( num1:number, num2:number) : number {
     return num1 + num2;
 }
 
-const add2 = (num1:number, num2:number) : number => num1 = num2;
+const add2 = (num1:number, num2:number) : number => num1 + num2;
 
 // function in object
 const poorUser = {
@@ -48,4 +48,4 @@ const poorUser = {
 
 // funtion in loop
 const arr : number[] = [1,2,4];
-const sqrArr = arr.map((elem : number) : number => elem * elem)
+const sqrArr = arr.map( (elem : number) : number => elem * elem )
