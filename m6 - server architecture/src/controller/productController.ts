@@ -31,7 +31,7 @@ export const productController = async (
 
      
   }
-  else if(method === 'POST' && url === '/products'){
+  else if(method === 'POST' && url === '/products'){ // create & add new product
     
     const products = readProduct();
     const body = await parseBody(req);
@@ -47,5 +47,28 @@ export const productController = async (
      res.writeHead(200, { "content-type": "application/json" });
      res.end(JSON.stringify({ message: "products created Successfully.", data : newProduct}));
 
+  }
+  else if(method === 'PUT' && id !== null){
+    const body = await parseBody(req)
+    const products = readProduct()
+
+    const index = products.findIndex((p : IProduct)=>{
+      return p.id === id
+    })
+
+    if(index < 0){
+     res.writeHead(404, { "content-type": "application/json" });
+     res.end(JSON.stringify({ message: "Product Not Found"}));
+    }
+
+    products[index] = {
+      id : products[index].id,
+      ...body
+    }
+
+    insertProduct(products);
+    
+     res.writeHead(200, { "content-type": "application/json" });
+     res.end(JSON.stringify({ message: "Product Updated", data : products[index]}));
   }
 };
