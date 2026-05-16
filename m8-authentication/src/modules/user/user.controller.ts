@@ -1,7 +1,6 @@
-import { Router, type Request, type Response } from "express";
-import { pool } from "../../db";
-import { userService } from "./user.service";
+import { type Request, type Response } from "express";
 
+import { userService } from "./user.service";
 
 // create a user & insert in table
 const createUser = async (req: Request, res: Response) => {
