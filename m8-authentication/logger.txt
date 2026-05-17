@@ -1,0 +1,34 @@
+Method -> /api/users/  | Time : 1779024566063. | URL -> /api/users/
+ Method -> /api/users/2  | Time : 1779024652037. | URL -> /api/users/2 
+
+Method -> /api/users/2  | Time : 1779028187902. | URL -> /api/users/2 
+
+Method -> /api/users/  | Time : 1779028248180. | URL -> /api/users/ 
+
+Method -> /api/auth/login  | Time : 1779028340629. | URL -> /api/auth/login 
+
+Method -> /api/users  | Time : 1779028462256. | URL -> /api/users 
+
+Method -> /api/auth/login  | Time : 1779028478314. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779028709651. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779028787086. | URL -> /api/auth/login 
+
+Method -> /api/users  | Time : 1779029067788. | URL -> /api/users 
+
+Method -> /api/auth/login  | Time : 1779029079726. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779029092761. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779029330266. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779029331948. | URL -> /api/auth/login 
+
+Method -> /api/auth/login  | Time : 1779029419397. | URL -> /api/auth/login 
+
+Method -> /api/users/  | Time : 1779033482536. | URL -> /api/users/ 
+
+Method -> /api/users/  | Time : 1779033658692. | URL -> /api/users/ 
+
+Method -> /api/users/  | Time : 1779033661921. | URL -> /api/users/ 
