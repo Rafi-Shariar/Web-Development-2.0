@@ -8,14 +8,18 @@ import { profileRoute } from "./modules/profile/profile.route";
 import { authRouter } from "./modules/auth/auth.route";
 import fs from "fs"
 import logger from "./middleware/logger";
-
-
+import CookieParser from "cookie-parser";
+import cors from "cors";
+import globalErrorHandler from "./middleware/globalErrorHandler";
 const app: Application = express();
 
 // middleware
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
 app.use(express.json());
-
 app.use(logger)
+app.use(CookieParser())
 
 
 app.use('/api/users', userRoute)
@@ -24,4 +28,7 @@ app.use('/api/profile', profileRoute)
 
 app.use('/api/auth', authRouter)
 
+
+// Global Error Handling Middleware
+app.use(globalErrorHandler);
 export default app;
