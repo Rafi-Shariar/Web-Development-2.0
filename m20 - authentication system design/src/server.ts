@@ -6,7 +6,7 @@ const PORT = config.port;
 async function main(){
     try {
 
-        await prisma.$connnect();
+        await prisma.$connect();
         console.log("Connected to db successfully");
         
         app.listen(PORT, ()=>{
