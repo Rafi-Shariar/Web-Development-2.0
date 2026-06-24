@@ -26,5 +26,6 @@ app.get("/", async (req : Request,res : Response)=>{
     res.send("Hello")
 })
 
+//user routes
 app.use("/api/users", userRouter)
 export default app;

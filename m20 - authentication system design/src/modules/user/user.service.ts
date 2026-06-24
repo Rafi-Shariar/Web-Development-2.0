@@ -18,23 +18,20 @@ const registerUserIntoDb = async(payload : RegisterUserPayload) =>{
 
     const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds))
     
-    //creating user
+    //creating user & profile
     const createdUser = await prisma.user.create({
         data : {
             name,
             email,
-            password : hashedPassword
+            password : hashedPassword,
+            profile : {
+               create:{
+                 profilePhoto
+               }
+            }
         }
     })
 
-    //creating profile for user
-    await prisma.profile.create({
-        data : {
-            userId : createdUser.id,
-            profilePhoto,
-
-        }
-    })
 
     const user = await prisma.user.findUnique({
         where : {
