@@ -15,9 +15,12 @@ const varifyToken = (token : string, secrete : string) => {
   
   try {
     const varifiedToken = jwt.verify(token, secrete)
-    return varifiedToken;
+    return { success : true, data : varifiedToken};
   } catch (error : any) {
-    throw new Error(error.message)
+    return {
+      success : false,
+      error : error.message
+    }
     
   }
   

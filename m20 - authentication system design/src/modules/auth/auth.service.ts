@@ -12,6 +12,12 @@ const loginUserFromDB = async (payload : ILoginUser) =>{
         where : {email}
     })
 
+    if(!user) throw new Error("User not found")
+
+    if(user.activeStatus === "BLOCKED"){
+        throw new Error("Your account has been blocked. Please contact support")
+    }
+
     const isPasswordMatched = await bcrypt.compare(password, user.password);
 
     if(!isPasswordMatched){

@@ -26,17 +26,12 @@ const registerUser = catchAsync(
 
 const getMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     
-  const {accessToken} = req.cookies;
-  const varifiedToken = jwtUtils.varifyToken(accessToken, config.jwt_access_screte);
-
-  if(typeof varifiedToken === "string") throw new Error(varifiedToken)
-
-  const profile = await userService.getMyProfileFromDB(varifiedToken.id )
+  const profile = await userService.getMyProfileFromDB(req.user?.id as string)
 
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.CREATED,
-      message: "User Register Successfull",
+      message: "Profile Retrived Successfully",
       data: {profile} 
     });
 
