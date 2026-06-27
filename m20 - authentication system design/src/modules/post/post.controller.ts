@@ -94,7 +94,13 @@ const updatePost = catchAsync(
 
 const getPostStats = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-
+    const result = await postService.getPostsStats()
+    sendResponse(res,{
+        success : true,
+        statusCode : httpStatus.OK,
+        message : "Post stats retrieved successfully",
+        data : result
+    })
 });
 
 
@@ -102,6 +108,19 @@ const getPostStats = catchAsync(
 
 const deletePost = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+
+     const authorId = req.user?.id;
+    const isAdmin = req.user?.role === "ADMIN";
+    const postId =  req.params.postId;
+
+    const result = await postService.deletePost(postId as string,authorId as string, isAdmin)
+
+    sendResponse(res,{
+        success : true,
+        statusCode : httpStatus.OK,
+        message : "Post deleted successfully.",
+        data : result
+    })
 
 });
 export const postController = {createPost, getAllPosts, getPostStats, getMyPosts, getPostById, updatePost, deletePost}
