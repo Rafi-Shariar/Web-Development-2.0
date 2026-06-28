@@ -30,5 +30,5 @@ app.get("/", async (req : Request,res : Response)=>{
 app.use("/api/users", userRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/posts", postRoute)
-app.use("api/comments", commentRoutes)
+app.use("/api/comments", commentRoutes)
 export default app;
