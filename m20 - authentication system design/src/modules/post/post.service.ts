@@ -2,6 +2,7 @@ import { title } from "node:process";
 import { CommentStatus, PostStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { ICreatePostPayload, IPostQuery, IUpdatePostPayload } from "./post.interface";
+import { PostWhereInput } from "../../../generated/prisma/models";
 
 const createPost = async (payload: ICreatePostPayload, userId: string) => {
   const result = await prisma.post.create({
@@ -16,51 +17,155 @@ const createPost = async (payload: ICreatePostPayload, userId: string) => {
 
 
 //Advance searching, filtering, pagination
-const getAllPosts = async (query : IPostQuery) => {
+// const getAllPosts = async (query : IPostQuery) => {
 
-  const limit = query.limit ? Number(query.limit) : 10;
-  const page = query.page ? Number(query.page) : 1;
-  const skip = (page - 1) * limit;
-  const sortBy = query.sortBy ? query.sortBy : "createdAt";
-  const sortOrder = query.sortOrder? query.sortOrder : "desc";
+//   const limit = query.limit ? Number(query.limit) : 10;
+//   const page = query.page ? Number(query.page) : 1;
+//   const skip = (page - 1) * limit;
+//   const sortBy = query.sortBy ? query.sortBy : "createdAt";
+//   const sortOrder = query.sortOrder? query.sortOrder : "desc";
+
+//   const tags = query.tags ? JSON.parse(query.tags as string) : null;
+//   const tagsArray = Array.isArray(tags) ? tags : []
 
 
-  const posts = await prisma.post.findMany({
+//   const andConditions : PostWhereInput[] = [];
+//   if(query.searchTerm){
+//     andConditions.push({
+//        OR : [
+//               { title : 
+//                 {
+//                   contains : query.searchTerm,
+//                   mode : "insensitive"
+//                 }
+//               },
+//               {
+//                 content : 
+//                 {
+//                   contains : query.searchTerm,
+//                   mode : "insensitive"
+//                 }
+//               }
+//             ]
+//     })
+//   }
+
+//   if(query.title){
+//     andConditions.push({
+//       title : query.title
+//     })
+//   }
+
+//   if(query.content){
+//     andConditions.push({
+//       content : query.content
+//     })
+//   }
+
+//   if(query.authorId){
+//     andConditions.push({
+//       authorId : query.authorId
+//     })
+//   }
+
+//   if(query.isFeatured){
+//     andConditions.push({
+//       isFeatured : Boolean(query.isFeatured)
+//     })
+//   }
+
+//   if(query.tags){
+//     andConditions.push({
+//       tags : {
+//         hasSome : tagsArray
+//       }
+//     })
+//   }
+
+//   if(query.status){
+//     andConditions.push({
+//       status : query.status
+//     })
+//   }
+
+
+//   const posts = await prisma.post.findMany({
     
-    where : {
-      AND : [
-          //title filtering
-          query.title? { title : query.title} : {},
-          query.content? { content : query.content} : {},
-          query.searchTerm ?{
-            OR : [
-              { title : 
-                {
-                  contains : query.searchTerm,
-                  mode : "insensitive"
-                }
-              },
-              {
-                content : 
-                {
-                  contains : query.searchTerm,
-                  mode : "insensitive"
-                }
-              }
-            ]
-          } : {}
-        
-      ]
+//     where :{
+//       AND : andConditions
+//     },
+//     take : limit,
+//     skip : skip,
+//     orderBy : {
+//       [sortBy] : sortOrder
+//     },
 
+
+//     include: {
+//       author: {
+//         omit: { password: true },
+//       },
+//       comments: true,
+//     },
+//   });
+//   return posts;
+// };
+
+export const getAllPosts = async (query: IPostQuery) => {
+  // 1. Pagination & Sorting Defaults
+  const limit = Math.max(1, query.limit ? Number(query.limit) : 10);
+  const page = Math.max(1, query.page ? Number(query.page) : 1);
+  const skip = (page - 1) * limit;
+  
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  // 2. Build Prisma Filter Conditions
+  const andConditions:PostWhereInput[] = [];
+
+  // Search filter
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        { title: { contains: query.searchTerm, mode: "insensitive" } },
+        { content: { contains: query.searchTerm, mode: "insensitive" } },
+      ],
+    });
+  }
+
+  // Exact match text filters
+  if (query.title) andConditions.push({ title: query.title });
+  if (query.content) andConditions.push({ content: query.content });
+  if (query.authorId) andConditions.push({ authorId: query.authorId });
+  if (query.status) andConditions.push({ status: query.status });
+
+  // Safe Boolean parsing (handles string "false" correctly)
+  if (query.isFeatured !== undefined) {
+    andConditions.push({ isFeatured: String(query.isFeatured) === "true" });
+  }
+
+  // Safe Tags array parsing
+  if (query.tags) {
+    try {
+      const parsedTags = typeof query.tags === 'string' ? JSON.parse(query.tags) : query.tags;
+      const tagsArray = Array.isArray(parsedTags) ? parsedTags : [];
+      if (tagsArray.length > 0) {
+        andConditions.push({ tags: { hasSome: tagsArray } });
+      }
+    } catch (error) {
+      // Optional: Log JSON parsing error or handle gracefully
+      console.error("Failed to parse tags query parameter:", error);
+    }
+  }
+
+  // 3. Database Query Execution
+  const posts = await prisma.post.findMany({
+    where: andConditions.length > 0 ? { AND: andConditions } : {},
+    take: limit,
+    skip: skip,
+    orderBy: {
+      [sortBy]: sortOrder,
     },
-
-    take : limit,
-    skip : skip,
-    orderBy : {
-      [sortBy] : sortOrder
-    },
-
-
     include: {
       author: {
         omit: { password: true },
@@ -68,8 +173,10 @@ const getAllPosts = async (query : IPostQuery) => {
       comments: true,
     },
   });
+
   return posts;
 };
+
 
 const getPostById = async (postId: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
