@@ -1,3 +1,4 @@
+import Stripe from "stripe";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
@@ -47,4 +48,36 @@ const createCheckOutSession = async (userid: string) => {
   }
 };
 
-export const subscriptionServices = { createCheckOutSession };
+const handleWebhook = async (payload : Buffer, signature : string)=>{
+
+  const endpointSecret = config.webhook_secrete;
+  const event = stripe.webhooks.constructEvent(
+    payload,
+    signature,
+    endpointSecret
+  )
+
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session : Stripe.Checkout.Session = event.data.object;
+      console.log(event.data.object);
+      
+      
+      
+      break;
+    case 'customer.subscription.updated':
+      
+      break;
+    case 'customer.subscription.deleted':
+
+        break;
+    default:
+      
+      console.log(`No events matched ! Unhandled event type ${event.type}.`);
+      break;
+  }
+
+}
+
+
+export const subscriptionServices = { createCheckOutSession, handleWebhook };
