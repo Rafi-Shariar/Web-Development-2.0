@@ -2,6 +2,8 @@ import Stripe from "stripe";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
 import { stripe } from "../../lib/stripe";
+import { SubscriptionStatus } from "../../../generated/prisma/enums";
+import { handleChangeSubscription, handleCheckoutCompleted } from "./subscription.utils";
 
 const createCheckOutSession = async (userid: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
@@ -21,63 +23,62 @@ const createCheckOutSession = async (userid: string) => {
         metadata: { userId: user.id },
       });
 
-      stripeCustomerId = customer.id
+      stripeCustomerId = customer.id;
     }
 
     const session = await stripe.checkout.sessions.create({
-        line_items : [{
-            price : `${config.stripe_price_id}`,
-            quantity : 1
-        }],
-        mode : "subscription",
-        customer : stripeCustomerId,
-        payment_method_types : ["card"],
-        success_url : `${config.app_url}/premium?success=true`,
-        cancel_url : `${config.app_url}/payment?success=false`,
-        metadata : {userid : user.id}
-    })
+      line_items: [
+        {
+          price: `${config.stripe_price_id}`,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      customer: stripeCustomerId,
+      payment_method_types: ["card"],
+      success_url: `${config.app_url}/premium?success=true`,
+      cancel_url: `${config.app_url}/payment?success=false`,
+      metadata: { userId: user.id },
+    });
 
-    return session.url
-
-
+    return session.url;
   });
 
   return {
-    paymentUrl : transactionResult
-
-  }
+    paymentUrl: transactionResult,
+  };
 };
 
-const handleWebhook = async (payload : Buffer, signature : string)=>{
 
+const handleWebhook = async (payload: Buffer, signature: string) => {
   const endpointSecret = config.webhook_secrete;
   const event = stripe.webhooks.constructEvent(
     payload,
     signature,
-    endpointSecret
-  )
+    endpointSecret,
+  );
 
   switch (event.type) {
-    case 'checkout.session.completed':
-      const session : Stripe.Checkout.Session = event.data.object;
-      console.log(event.data.object);
+    case "checkout.session.completed":
       
-      
-      
+    await handleCheckoutCompleted(event.data.object)
       break;
-    case 'customer.subscription.updated':
-      
-      break;
-    case 'customer.subscription.deleted':
 
-        break;
+    case "customer.subscription.updated":
+      await handleChangeSubscription(event.data.object)
+      break;
+
+    case "customer.subscription.deleted":
+      await handleChangeSubscription(event.data.object)
+      break;
+
     default:
-      
       console.log(`No events matched ! Unhandled event type ${event.type}.`);
       break;
   }
+};
 
-}
+
 
 
 export const subscriptionServices = { createCheckOutSession, handleWebhook };
