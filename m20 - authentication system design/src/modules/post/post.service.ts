@@ -158,6 +158,10 @@ export const getAllPosts = async (query: IPostQuery) => {
     }
   }
 
+  andConditions.push({
+    isPremium : false
+  })
+
   // 3. Database Query Execution
   const posts = await prisma.post.findMany({
     where: andConditions.length > 0 ? { AND: andConditions } : {},
@@ -174,21 +178,35 @@ export const getAllPosts = async (query: IPostQuery) => {
     },
   });
 
-  return posts;
+  const totalPostCount = await prisma.post.count({
+    where : {
+      AND : andConditions
+    }
+  })
+
+  return {
+    data : posts,
+    meta : {
+      page : page,
+      limit : limit,
+      total : totalPostCount,
+      totalPages : Math.ceil(totalPostCount/limit)
+    }
+  };
 };
 
 
 const getPostById = async (postId: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
     await tx.post.update({
-      where: { id: postId },
+      where: { id: postId},
       data: {
         views: { increment: 1 },
       },
     });
 
     const post = await tx.post.findUniqueOrThrow({
-      where: { id: postId },
+      where: { id: postId, isPremium : false },
       include: {
         author: {
           omit: {
