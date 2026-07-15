@@ -1,11 +1,12 @@
-import React from 'react';
+import DislikeButton from "@/app/ui/DislikeButton";
 
-const BlogSlugPage = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+const BlogsSlugPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+
+    const { slug } = await params;
+  return <div>BlogsSlugPage : {slug}
+  
+    <DislikeButton blogSlug={slug} />
+  </div>;
 };
 
-export default BlogSlugPage;
+export default BlogsSlugPage
