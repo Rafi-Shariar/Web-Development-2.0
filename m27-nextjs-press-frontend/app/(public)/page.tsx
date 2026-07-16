@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   console.log("Root Route");
@@ -5,6 +6,7 @@ export default function HomePage() {
     <div>
       NewsPage
 
+      <Button variant={"outline"} size={"lg"}>Login</Button>
     </div>
   );
 }
