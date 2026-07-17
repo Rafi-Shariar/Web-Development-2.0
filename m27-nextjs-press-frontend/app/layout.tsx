@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter, Roboto } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const robotoHeading = Roboto({subsets:['latin'],variable:'--font-heading'});
 
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col" >
         {/* Navbar */}
         {children}
+        <Toaster position="top-right" richColors/>
 
         {/* Footer */}
         </body>
