@@ -3,17 +3,22 @@ import { Inter, Roboto } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/shared/navbar";
+import { getMe } from "@/service/getMe";
 
 const robotoHeading = Roboto({subsets:['latin'],variable:'--font-heading'});
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>)
+
+{
+
+
   return (
     <html
       lang="en"
@@ -21,7 +26,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col" >
         {/* Navbar */}
-        <Navbar></Navbar>
+        {/* <Navbar></Navbar> */}
         {children}
         <Toaster position="top-right" richColors/>
 

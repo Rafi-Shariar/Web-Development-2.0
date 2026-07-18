@@ -1,4 +1,4 @@
-"use main";
+"use client";
 
 import Link from "next/link";
 import { CircleUser, Package2 } from "lucide-react";
@@ -11,6 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/service/logout";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Organised Navigation Arrays
 const navItems = [
@@ -26,7 +29,56 @@ const userMenuItems = [
   { label: "Settings", href: "/settings" },
 ];
 
-export function Navbar() {
+type Iuser = {
+  
+  success: boolean,
+  statusCode: number,
+  message: string,
+  data: {
+        profile: {
+            id: string,
+            name: string,
+            email: string,
+            activeStatus: string,
+            role: string,
+            createdAt: string,
+            updatedAt: string,
+            profile: {
+                id: string,
+                profilePhoto: string,
+                bio: string,
+                userId: string,
+                createdAt: string,
+                updatedAt: string
+            }
+        }
+  }
+
+}
+
+
+type NavbarProps = {
+  user : Iuser
+}
+
+
+
+
+export function Navbar({user} : NavbarProps) {
+
+  const router = useRouter()
+
+  const handleUserMenuAction = async (action : string) =>{
+
+    if(action === "logout"){
+      await logout();
+      toast.success("log out successful!")
+      router.push("/login")
+      
+    }
+  }
+
+ 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -54,7 +106,8 @@ export function Navbar() {
 
         {/* Right: User Dropdown */}
         <div className="flex items-center justify-end min-w-[150px]">
-          <DropdownMenu>
+         {
+          user.success ? ( <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 <CircleUser className="h-5 w-5" />
@@ -62,7 +115,7 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.data?.profile?.email || "Guest"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               
               {/* Mapping through dropdown options */}
@@ -75,11 +128,14 @@ export function Navbar() {
               ))}
               
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive cursor-pointer">
-                Log out
+              <DropdownMenuItem className="text-destructive cursor-pointer" onClick={async ()=> {
+                await handleUserMenuAction("logout")
+              }}>
+                Log Out
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu>) : <Link href={"/login"}> <Button variant={"default"}>login</Button></Link>
+         }
         </div>
 
       </div>
