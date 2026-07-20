@@ -3,32 +3,56 @@ import type { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { jwtUtils } from "./utils/jwt";
 import { cookies } from "next/headers";
+import { getNewAccessToken } from "./service/getRefreshToken";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
 const PUBLIC_ROUTES = ["/", "/news", "/login", "/register"];
 
-
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  console.log("Pathname: ", pathname);
+  const cookieStore = await cookies();
 
-  const accessToken = request.cookies.get("accessToken")?.value;
-  const decodedToken = await (accessToken
+  const refreshToken = request.cookies.get("refreshToken")?.value;
+  const decodedRefreshToken = await (refreshToken
+    ? jwtUtils.varifyToken(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRETE as string,
+      )
+    : null);
+
+  let accessToken = request.cookies.get("accessToken")?.value;
+  let decodedAccessToken = await (accessToken
     ? jwtUtils.varifyToken(accessToken, process.env.JWT_ACCESS_SCRETE as string)
     : null);
+
+  //Access Token Expired but refrsh token is valid
+  if (!decodedAccessToken?.success && decodedRefreshToken?.success) {
+    const result = await getNewAccessToken();
+    if (result.success) {
+      const newAccessToken = result.data.accessToken;
+      cookieStore.set("accessToken", newAccessToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24,
+        sameSite: "lax",
+      });
+
+      accessToken = newAccessToken;
+      decodedAccessToken = await (jwtUtils.varifyToken(accessToken!, process.env.JWT_ACCESS_SCRETE as string))
+    }
+  }
 
   let userRole = null;
 
   //access token expired!
-  if(!decodedToken?.success){
+  if (!decodedAccessToken?.success) {
     const cookieStore = await cookies();
-    cookieStore.delete("accessToken")
-    return NextResponse.redirect(new URL("/login", request.url));
+    cookieStore.delete("accessToken");
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (decodedToken?.success && decodedToken.data) {
-    userRole = (decodedToken.data as JwtPayload).role;
+  if (decodedAccessToken?.success && decodedAccessToken.data) {
+    userRole = (decodedAccessToken.data as JwtPayload).role;
   }
 
   //user is logged in but trying to access login/register page
@@ -44,32 +68,27 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-
   //Protecting Routes which can not be accessed without authentication. Authorization not done
-  const isPublic = PUBLIC_ROUTES.some((route)=> pathname === route || pathname.startsWith(route + '/'))
+  const isPublic = PUBLIC_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/"),
+  );
 
-  if(!accessToken && !isPublic){
+  if (!accessToken && !isPublic) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   //Authorization of routes
 
-  if(pathname.startsWith('/dashboard') && userRole !=="USER"){
+  if (pathname.startsWith("/dashboard") && userRole !== "USER") {
+    return NextResponse.redirect(new URL("/not-found", request.url));
+  } else if (pathname.startsWith("/admin-dashboard") && userRole !== "ADMIN") {
+    return NextResponse.redirect(new URL("/not-found", request.url));
+  } else if (
+    pathname.startsWith("/author-dashboard") &&
+    userRole !== "AUTHOR"
+  ) {
     return NextResponse.redirect(new URL("/not-found", request.url));
   }
-  else if(pathname.startsWith('/admin-dashboard') && userRole !=="ADMIN"){
-    return NextResponse.redirect(new URL("/not-found", request.url));
-  }
-  else if(pathname.startsWith('/author-dashboard') && userRole !=="AUTHOR"){
-    return NextResponse.redirect(new URL("/not-found", request.url));
-  }
-
-
-
-
-
- 
-
 
   return NextResponse.next();
 }
