@@ -1,24 +1,34 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { jwtUtils } from "./utils/jwt";
+import { cookies } from "next/headers";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
 const PUBLIC_ROUTES = ["/", "/news", "/login", "/register"];
-// This function can be marked `async` if using `await` inside
+
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   console.log("Pathname: ", pathname);
 
   const accessToken = request.cookies.get("accessToken")?.value;
-  const decodedToken = accessToken
-    ? (jwt.decode(accessToken) as JwtPayload)
-    : null;
+  const decodedToken = await (accessToken
+    ? jwtUtils.varifyToken(accessToken, process.env.JWT_ACCESS_SCRETE as string)
+    : null);
 
   let userRole = null;
 
-  if (decodedToken) {
-    userRole = decodedToken.role;
+  //access token expired!
+  if(!decodedToken?.success){
+    const cookieStore = await cookies();
+    cookieStore.delete("accessToken")
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (decodedToken?.success && decodedToken.data) {
+    userRole = (decodedToken.data as JwtPayload).role;
   }
 
   //user is logged in but trying to access login/register page
