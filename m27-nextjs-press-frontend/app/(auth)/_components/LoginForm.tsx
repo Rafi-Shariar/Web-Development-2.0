@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import React, { useActionState, useEffect } from 'react';
 import { loginAction } from '../_actions/authActions';
 import { toast } from 'sonner';
-import { Spinner } from '@/components/ui/spinner';
+// import { Spinner } from '@/components/ui/spinner';
 import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
@@ -35,7 +35,7 @@ const LoginForm = () => {
                     <Input name='password' type='password' placeholder='Enter your password' required></Input>
                     <Button type='submit' className='cursor-pointer bg-green-700'>
                         {
-                            pending ? <Spinner className='size-6'/> : "Login"
+                            pending ? "pending" : "Login"
                         }
                         </Button>
                 </Card>
