@@ -18,9 +18,11 @@ import { useRouter } from "next/navigation";
 // Organised Navigation Arrays
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Orders", href: "/orders" },
-  { label: "Products", href: "/products" },
-  { label: "Analytics", href: "/analytics" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/servicess" },
+  { label: "Contact", href: "/Contact" },
+  { label: "News", href: "/news" },
+  { label: "Premium", href: "/premium" },
 ];
 
 const userMenuItems = [
