@@ -1,28 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPost } from "@/lib/types";
 import { NewsCard } from "./NewsCard";
+import { GetNews } from "../../_actions/getNews";
 
 export async function PublicNewsList() {
 
-  const result = {
-    success: true,
-    data: [
-      {
-        id: "1",
-        title: "Public News 1",
-        content: "This is the content of public news 1.",
-        thumbnail: "https://via.placeholder.com/150",
-        isFeatured: true,
-        status: "PUBLISHED",
-        tags: ["tag1", "tag2"],
-        views: 100,
-        isPremium: false,
-        authorId: "1",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-    ]
-  };
+  const result = await GetNews();
 
   if (!result.success || !result.data?.length) {
     return (

@@ -12,7 +12,6 @@ export async function PremiumNewsList({
 
   const result = await getPremiumNews();
 
-  console.log(result);
   
 
   if (!result.success || !result.data?.length) {
