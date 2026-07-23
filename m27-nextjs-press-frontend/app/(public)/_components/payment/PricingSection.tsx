@@ -1,29 +1,34 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckIcon } from "lucide-react";
+import { getSubscriptionStatus } from "../../_actions/getSubscriptionStatus";
 import { SubscribeButton } from "./SubscribeButton";
-// import { getSubscriptionStatus } from "../../_actions/getSubscriptionStatus";
-
 
 export async function PricingSection() {
-//   const statusResult = await getSubscriptionStatus()
+  const statusResult = await getSubscriptionStatus()
 
-//   const isActive = Boolean(
-//     statusResult?.success && statusResult.data?.isSubscribed,
-//   );
+  console.log(statusResult);
+  
+
+  const isActive = Boolean(
+    statusResult?.success && statusResult.data?.isSubcribed,
+  );
+
+  console.log(isActive);
+  
 
   return (
     <Card className="mx-auto max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           Premium Plan
-          {/* {isActive && <Badge>Active</Badge>} */}
+          {isActive && <Badge>Active</Badge>}
         </CardTitle>
-        {/* <CardDescription>
+        <CardDescription>
           {isActive && statusResult.data?.currentPeriodEnd
             ? `Renews on ${new Date(statusResult.data.currentPeriodEnd).toLocaleDateString()}`
             : "Unlock every premium story, cancel anytime."}
-        </CardDescription> */}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <ul className="space-y-2 text-sm">
@@ -40,7 +45,7 @@ export async function PricingSection() {
             Support independent journalism
           </li>
         </ul>
-        { <SubscribeButton />}
+        {!isActive && <SubscribeButton />}
         {/* {<SubscribeButton />} */}
       </CardContent>
     </Card>

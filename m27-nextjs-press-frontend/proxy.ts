@@ -4,6 +4,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { jwtUtils } from "./utils/jwt";
 import { cookies } from "next/headers";
 import { getNewAccessToken } from "./service/getRefreshToken";
+import path from "path";
+import { getSubscriptionStatus } from "./app/(public)/_actions/getSubscriptionStatus";
 
 const AUTH_ROUTES = ["/login", "/register"];
 
@@ -38,7 +40,10 @@ export async function proxy(request: NextRequest) {
       });
 
       accessToken = newAccessToken;
-      decodedAccessToken = await (jwtUtils.varifyToken(accessToken!, process.env.JWT_ACCESS_SCRETE as string))
+      decodedAccessToken = await jwtUtils.varifyToken(
+        accessToken!,
+        process.env.JWT_ACCESS_SCRETE as string,
+      );
     }
   }
 
@@ -88,6 +93,29 @@ export async function proxy(request: NextRequest) {
     userRole !== "AUTHOR"
   ) {
     return NextResponse.redirect(new URL("/not-found", request.url));
+  }
+
+  //payment page
+  if (pathname === "/premium") {
+    const subscriptionStatus = await getSubscriptionStatus();
+    const isActive = Boolean(
+      subscriptionStatus?.success && subscriptionStatus.data?.isSubcribed,
+    );
+
+    if(!isActive){
+      return NextResponse.redirect(new URL('/payment', request.url))
+    }
+  }
+
+  if(pathname ==='/payment'){
+    const subscriptionStatus = await getSubscriptionStatus();
+    const isActive = Boolean(
+      subscriptionStatus?.success && subscriptionStatus.data?.isSubcribed,
+    );
+
+    if(isActive){
+      return NextResponse.redirect(new URL('/premium', request.url))
+    }
   }
 
   return NextResponse.next();
