@@ -6,12 +6,15 @@ import React, { useActionState, useEffect } from 'react';
 import { loginAction } from '../_actions/authActions';
 import { toast } from 'sonner';
 // import { Spinner } from '@/components/ui/spinner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const LoginForm = () => {
 
-    const [ state, action, pending] = useActionState(loginAction, false);
-    // const router = useRouter()
+    const searchParams = useSearchParams();
+    const redirectTo = searchParams.get("redirectTo") ?? ""
+
+    const [ state, action, pending] = useActionState(loginAction.bind(null, redirectTo), false);
+    
 
     useEffect(()=>{
         if(!state) return;

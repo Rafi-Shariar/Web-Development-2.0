@@ -74,12 +74,19 @@ export async function proxy(request: NextRequest) {
   }
 
   //Protecting Routes which can not be accessed without authentication. Authorization not done
-  const isPublic = PUBLIC_ROUTES.some(
+  const isPublicRoute = PUBLIC_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
 
-  if (!accessToken && !isPublic) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname === route || pathname.startsWith(route + "/"))
+
+
+
+  if (!accessToken && !isPublicRoute && !isAuthRoute) {
+    const loginUrl = new URL('/login', request.url)
+
+    loginUrl.searchParams.set("redirectTo", pathname )
+    return NextResponse.redirect(loginUrl);
   }
 
   //Authorization of routes
@@ -123,9 +130,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // '/dashboard/:path*',
-    // '/admin-dashboard/:path*',
-    // '/author-dashbaord/:path*'
     "/((?!api|_next/static|_next/image|.*\\.png$).*)",
   ],
 };
