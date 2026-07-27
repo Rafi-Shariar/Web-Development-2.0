@@ -92,6 +92,9 @@ export function Navbar({user} : NavbarProps) {
 
         {/* Right: User Dropdown */}
         <div className="flex items-center justify-end min-w-[150px]">
+          <div>
+            <h1 className="mr-10">Likes : </h1>
+          </div>
          {
           user.success ? ( <DropdownMenu>
             <DropdownMenuTrigger asChild>
