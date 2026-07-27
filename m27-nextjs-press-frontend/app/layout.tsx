@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { Navbar } from "@/components/shared/navbar";
 import { getMe } from "@/service/getMe";
 import StoreProvider from "./StoreProvider";
+import { Suspense } from "react";
 
 const robotoHeading = Roboto({
   subsets: ["latin"],
@@ -30,14 +31,16 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <StoreProvider>
-          {/* Navbar */}
-          {/* <Navbar></Navbar> */}
-          {children}
-          <Toaster position="top-right" richColors />
+        <Suspense fallback={null}>
+          <StoreProvider>
+            {/* Navbar */}
+            {/* <Navbar></Navbar> */}
+            {children}
+            <Toaster position="top-right" richColors />
 
-          {/* Footer */}
-        </StoreProvider>
+            {/* Footer */}
+          </StoreProvider>
+        </Suspense>
       </body>
     </html>
   );

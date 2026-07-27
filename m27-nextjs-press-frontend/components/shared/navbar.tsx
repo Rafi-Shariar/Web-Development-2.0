@@ -15,6 +15,8 @@ import { logout } from "@/service/logout";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { NavbarProps } from "@/lib/types";
+import { useAppSelector } from "@/lib/store/hooks";
+import { stat } from "fs";
 
 // Organised Navigation Arrays
 const navItems = [
@@ -64,6 +66,9 @@ export function Navbar({user} : NavbarProps) {
     }
   }
 
+  //Redux Learing
+  const items = useAppSelector(state => state.cart.items)
+
  
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
@@ -93,7 +98,7 @@ export function Navbar({user} : NavbarProps) {
         {/* Right: User Dropdown */}
         <div className="flex items-center justify-end min-w-[150px]">
           <div>
-            <h1 className="mr-10">Likes : </h1>
+            <h1 className="mr-10">Likes : {items.length}</h1>
           </div>
          {
           user.success ? ( <DropdownMenu>
