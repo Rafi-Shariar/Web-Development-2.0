@@ -23,8 +23,6 @@ import { ISidebarItem, NavbarProps } from "@/lib/types";
 export default function DashboardSidebar({user} : NavbarProps) {
   const pathname = usePathname();
 
-
-
   let navItems : ISidebarItem[]  = [];
 
   if(user.data.profile.role === "USER"){

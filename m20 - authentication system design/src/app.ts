@@ -19,7 +19,6 @@ app.use(cors({
     credentials:true
 }))
 
-const endpointSecret = config.webhook_secrete;
 
 app.use("/api/subscription/webhook", express.raw({type : 'application/json'}))
 
