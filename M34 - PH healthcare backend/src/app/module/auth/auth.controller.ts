@@ -5,9 +5,11 @@ import { sendResponse } from "../../utils/sendResponse";
 import type { IRequestUser } from "./auth.interface";
 import { AuthService } from "./auth.service";
 
+
 const registerPatient = catchAsync(async (req: Request, res: Response) => {
-	const payload = req.body;
-	const result = await AuthService.registerPatient(payload);
+	
+
+	const result = await AuthService.registerPatient(req.body);
 
 	const { accessToken, refreshToken, user, patient } = result;
 
@@ -114,17 +116,14 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 });
 
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
-	
 	const payload = req.body;
-	const reuslt = await AuthService.googleLogin(payload)
+	const reuslt = await AuthService.googleLogin(payload);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
 		message: "New tokens generated successfully",
-		data: {
-			
-		},
+		data: {},
 	});
 });
 
@@ -133,5 +132,5 @@ export const AuthController = {
 	loginUser,
 	getMe,
 	refreshToken,
-	googleLogin
+	googleLogin,
 };
