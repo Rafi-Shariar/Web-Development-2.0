@@ -20,6 +20,9 @@ import { OAuth2Client, TokenPayload } from "google-auth-library";
 import { googleClient } from "../../lib/googleAuth";
 import crypto from 'crypto'
 import { redisClient } from "../../lib/redis";
+import { transporter } from "../../lib/nodemailer";
+import ejs from "ejs"
+import path from "path";
 
 const registerPatient = async (payload: IRegisterPatientPayload) => {
 	const { name, password, patient : patiendData } = payload;
@@ -368,6 +371,22 @@ const forgotPassword = async(payload : IForgotPasswordPayload) => {
 		}
 	})
 
+	const templatePath = path.join(process.cwd(), "src/app/templates/forgot-password.ejs");
+
+	const html = await ejs.renderFile(templatePath, {
+		OTP : otp
+	})
+
+
+
+	await transporter.sendMail({
+		from : config.email_sender,
+		to : isUserExists.email,
+		subject : "OTP for reset password",
+		// text : `Your OTP is ${otp}`
+		html
+	})
+
 }
 
 const resetPassword = async(payload : IResetPasswordPayload) => {
@@ -423,6 +442,13 @@ const resetPassword = async(payload : IResetPasswordPayload) => {
 	})
 
 	await redisClient.del([key])
+
+	await transporter.sendMail({
+		from : config.email_sender,
+		to : isUserExists.email,
+		subject : "PH HealthCare - Your Password is changed.",
+		text : `Your password is changed sucessfully. please login to check.`
+	})
 
 }
 
