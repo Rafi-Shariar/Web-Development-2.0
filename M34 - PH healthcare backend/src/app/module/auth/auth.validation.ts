@@ -10,6 +10,15 @@ import z from "zod";
 })
 
 
+const resetPasswordZonSchema = z.object({
+	email : z.email(),
+	password : z.string().min(5, "Password must be atleast 5 characters"),
+	otp : z.string().length(6)
+	
+})
+
+
 export const PatientValidation = {
-	PatientRegistratinoZodSchema
+	PatientRegistratinoZodSchema,
+	resetPasswordZonSchema
 }

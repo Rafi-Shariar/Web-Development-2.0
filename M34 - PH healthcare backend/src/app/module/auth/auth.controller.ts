@@ -117,7 +117,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
 	const payload = req.body;
-	const reuslt = await AuthService.googleLogin(payload);
+	const result = await AuthService.googleLogin(payload);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
@@ -127,10 +127,38 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const forgotPassword = catchAsync(async (req: Request, res: Response) => {
+	const payload = req.body;
+	const result = await AuthService.forgotPassword(payload);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "OTP sent",
+		data: null,
+	});
+});
+
+
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+	const payload = req.body;
+	await AuthService.resetPassword(payload)
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Password changed successfully.",
+		data: null,
+	});
+});
+
+
 export const AuthController = {
 	registerPatient,
 	loginUser,
 	getMe,
 	refreshToken,
 	googleLogin,
+	forgotPassword,
+	resetPassword
 };
