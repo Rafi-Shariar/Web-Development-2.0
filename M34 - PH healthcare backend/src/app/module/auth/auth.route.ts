@@ -15,6 +15,14 @@ router.post(
   AuthController.registerPatient,
 );
 
+router.post(
+  "/verify-email",
+  AuthController.verifyPatientEmail,
+);
+
+
+
+
 router.post("/login", AuthController.loginUser);
 
 router.get(
