@@ -156,6 +156,8 @@ const verifyPatientEmail = async(payload : IVerifyEmailPayload) => {
 		include: { patient: true },
 	});
 
+	await redisClient.del(patientRegistrationKey)
+
 	const { patient, ...user } = createdUser;
 	const jwtPayload = {
 		userId: user.id,
@@ -383,6 +385,8 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 					googleId: googleIdTokenPayload.sub,
 				},
 			});
+
+			
 		} else {
 			user = await prisma.user.create({
 				data: {
