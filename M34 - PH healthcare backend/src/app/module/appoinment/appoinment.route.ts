@@ -8,7 +8,7 @@ import { appointmentController } from "./appoinment.controller";
 
 const router = Router();
 
-router.post('/book-appoinment', appointmentController.bookAppointment)
+router.post('/book-appoinment',auth(Role.PATIENT), appointmentController.bookAppointment)
 
 //book appointment callback url
 router.get('/book-appoinment/payment/callback', appointmentController.bookAppointmentCallback)
