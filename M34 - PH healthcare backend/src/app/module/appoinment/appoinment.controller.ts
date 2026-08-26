@@ -21,13 +21,15 @@ const bookAppointmentCallback = catchAsync(async (req: Request, res: Response) =
 	console.log(req.query, "Request.Query");
 	
 
-	const result = await AppointmentServices.bookAppointmentCallback()
-	sendResponse(res, {
-		statusCode: httpStatus.OK,
-		success: true,
-		message: "Book Appoinment Callback",
-		data: result,
-	});
+	const {executedPaymentResult, redirectUrl} = await AppointmentServices.bookAppointmentCallback(req.query)
+
+	res.redirect(redirectUrl as string)
+	// sendResponse(res, {
+	// 	statusCode: httpStatus.OK,
+	// 	success: true,
+	// 	message: "Book Appoinment Callback",
+	// 	data: result,
+	// });
 });
 
 
