@@ -6,7 +6,7 @@ model Payment {
 
     paymentGateway String @default("bkash")
     marchantInvoiceNumber   String @unique
-    bkashPaymentId String?
+    bkashPaymentId String @unique
     bkashTrxId String?
     payerReference String?
     paidAt String?
