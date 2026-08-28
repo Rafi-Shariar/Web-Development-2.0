@@ -13,7 +13,7 @@ const bookAppointment = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: "Profile Image Changed Successfully.",
+		message: "Appointment Payment Initiated successfully",
 		data: result,
 	});
 });
@@ -36,7 +36,40 @@ const bookAppointmentCallback = catchAsync(async (req: Request, res: Response) =
 });
 
 
+const payAppointment = catchAsync(async (req: Request, res: Response) => {
+
+	const payload = req.body;
+	const user = req.user!
+
+	const result = await AppointmentServices.payAppointment(payload, user)
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Appointment Payment Initiated successfully.",
+		data: result,
+	});
+});
+
+
+const cancleAppointment = catchAsync(async (req: Request, res: Response) => {
+
+	const payload = req.body;
+	const user = req.user!
+
+	const result = await AppointmentServices.cancelAppointment(payload, user)
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Appointment cancelled successfully.",
+		data: result,
+	});
+});
+
+
+
 export const appointmentController = {
 	bookAppointment,
-	bookAppointmentCallback
+	bookAppointmentCallback,
+	payAppointment,
+	cancleAppointment
 }
