@@ -14,6 +14,7 @@ import { AuthRoutes } from "./app/module/auth/auth.route";
 import z from "zod";
 import { UserRoutes } from "./app/module/user/user.route";
 import { AppointmentRoutes } from "./app/module/appoinment/appoinment.route";
+import { DoctorRoutes } from "./app/module/doctor/doctor.route";
 
 const app: Application = express();
 
@@ -34,6 +35,10 @@ app.use(cookieParser());
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/appointment", AppointmentRoutes)
+app.use("/api/v1/doctor", DoctorRoutes)
+
+
+
 app.use("/zod", async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const userZodSchema = z.object({
